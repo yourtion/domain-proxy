@@ -9,8 +9,6 @@ type MainConfig struct {
 type ServerConfig struct {
 	Name   string `toml:"name"`
 	Listen string `toml:"listen"`
-	URL    string `toml:"url"`
-	Prefix string `toml:"prefix"`
 	PProf  string `toml:"pprof"`
 }
 
