@@ -69,8 +69,7 @@ func (rp *ReverseProxyPool) addProxy(key string) *httputil.ReverseProxy {
 }
 
 func (rp *ReverseProxyPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h := r.Host
-	key := strings.Split(h, ".")
+	key := strings.Split(r.Host, ".")
 	proxy := rp.getProxy(key[0])
 	if proxy == nil {
 		proxy = rp.addProxy(key[0])
