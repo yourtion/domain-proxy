@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 
 	"domain-proxy/src/base/config"
@@ -13,7 +14,7 @@ import (
 var log *logger.Entry
 
 func init() {
-	log = logger.NewModuleLogger("main").WithField("version", define.Version)
+	log = logger.NewModuleLogger("main")
 }
 
 func startPProf() {

@@ -4,8 +4,6 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-
-	"domain-proxy/src/base/define"
 )
 
 var Logger *logrus.Logger
@@ -18,7 +16,7 @@ func init() {
 	// 输出到 stdout
 	Logger.SetOutput(os.Stdout)
 
-	log = NewModuleLogger("logger").WithField("version", define.Version)
+	log = NewModuleLogger("logger")
 }
 
 type Entry = logrus.Entry
