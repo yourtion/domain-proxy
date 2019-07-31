@@ -16,7 +16,7 @@ updateBuildDate() {
 build() {
     rm -rf release/${1}
     mkdir -p release/${1}
-    GOOS=${1} GOARCH=amd64 go build -v -o release/${1}/short-url short-url/src
+    GOOS=${1} GOARCH=amd64 go build -v -o release/${1}/domain-proxy domain-proxy/src
     cp dev/config.toml release/${1}
 }
 

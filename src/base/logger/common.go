@@ -4,9 +4,12 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
+
+	"domain-proxy/src/base/define"
 )
 
 var Logger *logrus.Logger
+var log *Entry
 
 func init() {
 	Logger = logrus.New()
@@ -15,13 +18,7 @@ func init() {
 	// 输出到 stdout
 	Logger.SetOutput(os.Stdout)
 
-	// 初始化 syslog
-	// hook, err := lSyslog.NewSyslogHook("", "", syslog.LOG_WARNING, define.ServiceName)
-	// if err != nil {
-	// 	Logger.Errorf("init syslog hook failed: %s", err)
-	// } else {
-	// 	Logger.Hooks.Add(hook)
-	// }
+	log = NewModuleLogger("logger").WithField("version", define.Version)
 }
 
 type Entry = logrus.Entry
@@ -32,4 +29,19 @@ func WithFields(key string, value interface{}) *Entry {
 
 func NewModuleLogger(name string) *Entry {
 	return Logger.WithField("module", name)
+}
+
+func InitLogger(logLevel string) {
+	if level, err := logrus.ParseLevel(logLevel); err != nil {
+		log.Errorf("invalid log level: %s", logLevel)
+	} else {
+		Logger.SetLevel(level)
+		if level >= logrus.DebugLevel {
+			// 调试模式下输出带颜色的日志，方便阅读
+			Logger.SetFormatter(&logrus.TextFormatter{
+				ForceColors: true,
+			})
+		}
+		log.Infof("log level is %s", logLevel)
+	}
 }

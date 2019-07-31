@@ -4,22 +4,30 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sirupsen/logrus"
-
 	"domain-proxy/src/base/config"
 	"domain-proxy/src/base/define"
 	"domain-proxy/src/base/logger"
+	"domain-proxy/src/proxy"
 )
 
 var log *logger.Entry
-var server *http.Server
 
 func init() {
 	log = logger.NewModuleLogger("main").WithField("version", define.Version)
 }
 
+func startPProf() {
+	log.Warnf("start PProf web interface on %s", config.Config.Server.PProf)
+	log.Infof("Open on http://%s/debug/pprof/", config.Config.Server.PProf)
+	go func() {
+		if err := http.ListenAndServe(config.Config.Server.PProf, nil); err != nil {
+			log.Warnln(err)
+		}
+	}()
+}
+
 func startServer() {
-	rp := NewReverseProxyPool()
+	rp := proxy.NewReverseProxyPool()
 	if err := http.ListenAndServe(config.Config.Server.Listen, rp); err != nil {
 		if err == http.ErrServerClosed {
 			log.Warnln(err)
@@ -37,7 +45,7 @@ func main() {
 
 	// 载入配置
 	config.LoadConfig(workingDir, configFile)
-	log.Infof("server name is %s", config.Config.Server.Name)
+	log.Infof("server name is %s -> %s", config.Config.Server.Name, define.ServiceName)
 	log.Infof("config: %+v", config.Config)
 
 	// 切换到指定的工作目录
@@ -48,30 +56,13 @@ func main() {
 	}
 
 	// 初始化日志记录器
-	if level, err := logrus.ParseLevel(config.Config.Log.Level); err != nil {
-		log.Errorf("invalid log level: %s", config.Config.Log.Level)
-	} else {
-		logger.Logger.SetLevel(level)
-		if level >= logrus.DebugLevel {
-			// 调试模式下输出带颜色的日志，方便阅读
-			logger.Logger.SetFormatter(&logrus.TextFormatter{
-				ForceColors: true,
-			})
-		}
-		log.Infof("log level is %s", config.Config.Log.Level)
-	}
+	logger.InitLogger(config.Config.Log.Level)
 
-	// 判断是否需要启动 pprof
+	// 判断是否需要启动 PProf
 	if len(config.Config.Server.PProf) > 0 {
-		log.Warnf("start pprof web interface on %s", config.Config.Server.PProf)
-		log.Infof("Open on http://%s/debug/pprof/", config.Config.Server.PProf)
-		go func() {
-			if err := http.ListenAndServe(config.Config.Server.PProf, nil); err != nil {
-				log.Warnln(err)
-			}
-		}()
+		startPProf()
 	}
-	log.Printf("server listen on %s", config.Config.Server.Listen)
 
+	log.Printf("Server listen on %s", config.Config.Server.Listen)
 	startServer()
 }
