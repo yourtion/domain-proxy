@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -29,7 +30,19 @@ func startPProf() {
 
 func startServer() {
 	rp := proxy.NewReverseProxyPool()
-	if err := http.ListenAndServe(config.Config.Server.Listen, rp); err != nil {
+	var err error
+	conf := config.Config.Server
+	// 监听端口
+	listener, err := net.Listen("tcp", conf.Listen)
+	if err != nil {
+		log.Fatalf("listener failed: %s", err)
+	}
+	if config.Config.Server.Https {
+		err = http.ServeTLS(listener, rp, conf.HttpsPem, conf.HttpsKey)
+	} else {
+		err = http.Serve(listener, rp)
+	}
+	if err != nil {
 		if err == http.ErrServerClosed {
 			log.Warnln(err)
 		} else {

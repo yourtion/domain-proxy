@@ -5,6 +5,10 @@ name = "local"
 listen = "127.0.0.1:8888"
 # 开启pprof调试界面，监听地址和端口，如果去掉此配置项则表示关闭
 pprof = "127.0.0.1:6060"
+# HTTPS 配置
+https = false
+https_pem = ""
+https_key = ""
 
 [log]
 # 日志输出等级，生产环境建议为 info

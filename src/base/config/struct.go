@@ -7,9 +7,12 @@ type MainConfig struct {
 }
 
 type ServerConfig struct {
-	Name   string `toml:"name"`
-	Listen string `toml:"listen"`
-	PProf  string `toml:"pprof"`
+	Name     string `toml:"name"`
+	Listen   string `toml:"listen"`
+	PProf    string `toml:"pprof"`
+	Https    bool   `toml:"https"`
+	HttpsPem string `toml:"https_pem"`
+	HttpsKey string `toml:"https_key"`
 }
 
 type LogConfig struct {
