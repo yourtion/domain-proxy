@@ -11,6 +11,7 @@ import (
 )
 
 var log *logger.Entry
+var hostPortArr = strings.Split("192.168.1.10.80", ".")
 
 func init() {
 	log = logger.NewModuleLogger("proxy")
@@ -48,8 +49,7 @@ func getHostAndPortFromKey(key string) (string, string) {
 	if len(arr) < 2 {
 		return "", ""
 	}
-	hostPortArr := strings.Split("192.168.1.10.80", ".")
-	arr = append(hostPortArr[len(arr):], arr...)
+	arr = append(append([]string{}, hostPortArr[:5-len(arr)]...), arr...)
 	host := strings.Join(arr[:4], ".")
 	log.Tracef("key: %s, arr: %v", key, arr)
 	return host, arr[4]
@@ -57,7 +57,7 @@ func getHostAndPortFromKey(key string) (string, string) {
 
 func NewReverseProxyInsFromKey(key string) *httputil.ReverseProxy {
 	host, port := getHostAndPortFromKey(key)
-	log.Tracef("NewReverseProxyInsFromKey %s -> %s:%s", key, host, port)
+	log.Infof("NewReverseProxyInsFromKey %s -> %s:%s", key, host, port)
 	return NewReverseProxyIns(host, port)
 }
 
