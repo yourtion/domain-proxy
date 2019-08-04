@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"crypto/tls"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -35,7 +36,13 @@ func NewReverseProxyIns(host string, port string) *httputil.ReverseProxy {
 	if err != nil {
 		return nil
 	}
-	return httputil.NewSingleHostReverseProxy(remote)
+	proxy := httputil.NewSingleHostReverseProxy(remote)
+	if protocol == "https" {
+		proxy.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
+	return proxy
 }
 
 func NewReverseProxyPool() *ReverseProxyPool {
