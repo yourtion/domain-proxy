@@ -8,14 +8,19 @@ import (
 	"strings"
 	"sync"
 
+	"domain-proxy/src/base/config"
 	"domain-proxy/src/base/logger"
 )
 
 var log *logger.Entry
-var hostPortArr = strings.Split("192.168.1.10.80", ".")
+var DefaultIp = "192.168.1.10.80"
+var hostPortArr = strings.Split(config.Config.Proxy.DefaultIp, ".")
 
 func init() {
 	log = logger.NewModuleLogger("proxy")
+	if hostPortArr == nil || len(hostPortArr) != 5 {
+		hostPortArr = strings.Split(DefaultIp, ".")
+	}
 }
 
 type ReverseProxyPool struct {
@@ -37,7 +42,7 @@ func NewReverseProxyIns(host string, port string) *httputil.ReverseProxy {
 		return nil
 	}
 	proxy := httputil.NewSingleHostReverseProxy(remote)
-	if protocol == "https" {
+	if config.Config.Proxy.SkipVerifySSL && protocol == "https" {
 		proxy.Transport = &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
