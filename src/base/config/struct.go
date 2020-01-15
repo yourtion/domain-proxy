@@ -1,10 +1,12 @@
 package config
 
 type MainConfig struct {
-	CWD    string       `toml:"cwd"`
-	Server ServerConfig `toml:"server"`
-	Log    LogConfig    `toml:"log"`
-	Proxy  ProxyConfig  `toml:"proxy"`
+	Loaded bool
+	CWD    string            `toml:"cwd"`
+	Server ServerConfig      `toml:"server"`
+	Log    LogConfig         `toml:"log"`
+	Proxy  ProxyConfig       `toml:"proxy"`
+	Alias  map[string]string `toml:"alias"`
 }
 
 type ServerConfig struct {

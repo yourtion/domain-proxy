@@ -23,4 +23,13 @@ func LoadConfig(workingDir string, file string) {
 	if len(Config.CWD) < 1 {
 		Config.CWD = workingDir
 	}
+	Config.Loaded = true
+}
+
+func MockConfig(conf MainConfig) {
+	if Config.Loaded {
+		panic("Mock loaded config")
+	}
+	log.Infof("mock config: %v", conf)
+	Config = conf
 }

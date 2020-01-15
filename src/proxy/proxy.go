@@ -57,6 +57,18 @@ func NewReverseProxyPool() *ReverseProxyPool {
 }
 
 func getHostAndPortFromKey(key string) (string, string) {
+	// 尝试解析别名
+	res, ok := config.Config.Alias[key]
+	if ok && res != "" {
+		arr := strings.Split(res, ":")
+		log.Tracef("Alias arr: %v", arr)
+		if len(arr) == 2 {
+			return arr[0], arr[1]
+		} else {
+			log.Warnf("Parse cache error: %s", res)
+		}
+	}
+	// 使用原有解析模式
 	arr := strings.Split(key, "-")
 	if len(arr) < 2 {
 		return "", ""
