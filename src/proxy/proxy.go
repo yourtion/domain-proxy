@@ -14,13 +14,10 @@ import (
 
 var log *logger.Entry
 var DefaultIp = "192.168.1.10.80"
-var hostPortArr = strings.Split(config.Config.Proxy.DefaultIp, ".")
+var hostPortArr = strings.Split(DefaultIp, ".")
 
 func init() {
 	log = logger.NewModuleLogger("proxy")
-	if hostPortArr == nil || len(hostPortArr) != 5 {
-		hostPortArr = strings.Split(DefaultIp, ".")
-	}
 }
 
 type ReverseProxyPool struct {
@@ -107,10 +104,17 @@ func (rp *ReverseProxyPool) addProxy(key string) *httputil.ReverseProxy {
 
 func (rp *ReverseProxyPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key := strings.Split(r.Host, ".")
+	if key[0] == "login" {
+		handleLogin(w, r)
+		return
+	}
+	ok := verifyLoginToken(w, r)
+	if !ok {
+		return
+	}
 	proxy := rp.getProxy(key[0])
 	if proxy == nil {
-		proxy = rp.addProxy(key[0])
-		if proxy == nil {
+		if proxy = rp.addProxy(key[0]); proxy == nil {
 			_, _ = w.Write([]byte("ok"))
 			return
 		}

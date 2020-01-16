@@ -20,5 +20,8 @@ default_ip = "192.168.1.10:80"
 # 代理时不验证SSL证书
 skip_verify_ssl = true
 
+[verify]
+secret = "yourtion"
+
 [alias]
 demo = "192.168.1.10:8888"
