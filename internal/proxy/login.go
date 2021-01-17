@@ -41,6 +41,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 func verifyLoginToken(w http.ResponseWriter, r *http.Request) bool {
 	cookie := getCookie(r, define.ServiceName)
 	if cookie == nil {
+		log.Warn("No cookie")
 		w.WriteHeader(http.StatusInternalServerError)
 		return false
 	}
