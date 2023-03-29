@@ -6,10 +6,10 @@ import (
 	_ "net/http/pprof"
 	"os"
 
-	"domain-proxy/src/base/config"
-	"domain-proxy/src/base/define"
-	"domain-proxy/src/base/logger"
-	"domain-proxy/src/proxy"
+	"github.com/yourtion/domain-proxy/internal/base/config"
+	"github.com/yourtion/domain-proxy/internal/base/define"
+	"github.com/yourtion/domain-proxy/internal/base/logger"
+	"github.com/yourtion/domain-proxy/internal/proxy"
 )
 
 var log *logger.Entry

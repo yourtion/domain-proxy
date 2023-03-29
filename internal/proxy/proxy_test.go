@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"domain-proxy/src/base/config"
+	"github.com/yourtion/domain-proxy/internal/base/config"
 )
 
 func TestGetHostAndPortFromKey(t *testing.T) {

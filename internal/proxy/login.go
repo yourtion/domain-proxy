@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"domain-proxy/src/base/define"
+	"github.com/yourtion/domain-proxy/internal/base/define"
 )
 
 func getCookie(r *http.Request, name string) *http.Cookie {

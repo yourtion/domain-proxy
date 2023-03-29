@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"domain-proxy/src/base/config"
-	"domain-proxy/src/base/logger"
+	"github.com/yourtion/domain-proxy/internal/base/config"
+	"github.com/yourtion/domain-proxy/internal/base/logger"
 )
 
 var log *logger.Entry

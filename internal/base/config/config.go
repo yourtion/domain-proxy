@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/BurntSushi/toml"
 
-	"domain-proxy/src/base/logger"
+	"github.com/yourtion/domain-proxy/internal/base/logger"
 )
 
 var log *logger.Entry
